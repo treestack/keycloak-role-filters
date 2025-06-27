@@ -1,4 +1,4 @@
-package de.scobees.auth.provider.mapper;
+package de.treestack.auth.provider.mapper;
 
 import org.jboss.logging.Logger;
 import org.keycloak.models.*;
