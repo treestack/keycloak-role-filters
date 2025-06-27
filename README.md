@@ -11,8 +11,6 @@ This allows you to keep your tokens lean and only expose roles relevant for back
 - Optional invert mode to exclude matching roles instead of including them
 - Reduced token size by omitting unnecessary or sensitive roles
 
----
-
 ## Installation
 
 1. Build the JAR with Maven:
@@ -29,8 +27,6 @@ This allows you to keep your tokens lean and only expose roles relevant for back
    ```bash
    /opt/keycloak/bin/kc.sh restart
    ```
-
----
 
 ## Usage
 
@@ -53,14 +49,10 @@ In many systems, users have multiple roles — some controlling permissions in t
 - Reduce attack surface (sensitive roles stay hidden)
 - Keep feature toggles separate from security-critical roles
 
----
-
 ## Contributing
 
 PRs and issues are welcome!
 Please open an issue if you encounter problems or have suggestions for improvements.
-
----
 
 ## License
 
