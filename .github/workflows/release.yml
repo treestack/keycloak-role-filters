@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        profile: [ "keycloak-22", "keycloak-23", "keycloak-24", "keycloak-25", "keycloak-26" ]
+        profile: [ "keycloak-22" ]
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
