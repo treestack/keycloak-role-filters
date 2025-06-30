@@ -6,7 +6,7 @@
 
     <groupId>de.treestack.auth</groupId>
     <artifactId>regex-filter-protocol-mapper</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.0.1</version>
 
     <name>Regex Filter Protocol Mapper</name>
     <description>Filter Keycloak roles by regex before adding them to tokens. Reduce token size and control exposed roles.</description>
