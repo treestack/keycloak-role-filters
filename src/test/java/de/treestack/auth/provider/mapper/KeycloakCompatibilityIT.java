@@ -6,6 +6,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.MountableFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class KeycloakCompatibilityIT {
@@ -19,11 +25,21 @@ class KeycloakCompatibilityIT {
             "26.2.5"
     })
     void testKeycloakStartsWithMapper(String keycloakVersion) {
+        Path jarPath;
+        try (Stream<Path> paths = Files.list(Paths.get("target"))) {
+            jarPath = paths
+                    .filter(p -> p.getFileName().toString().matches("regex-filter-protocol-mapper-.*\\.jar"))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("No matching SPI JAR found in target/"));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to scan target directory", e);
+        }
+
         String image = "quay.io/keycloak/keycloak:" + keycloakVersion;
         try (KeycloakContainer keycloak = new KeycloakContainer(image)
                 .waitingFor(Wait.forLogMessage(".*Keycloak.*started.*", 1))
                 .withCopyFileToContainer(
-                        MountableFile.forHostPath("target/regex-filter-protocol-mapper-1.1-SNAPSHOT-keycloak-22+.jar"),
+                        MountableFile.forHostPath(jarPath),
                         "/opt/keycloak/providers/regex-filter-protocol-mapper.jar")
         )
         {
