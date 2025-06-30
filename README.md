@@ -1,9 +1,35 @@
-# keycloak-role-filters
+# Regex Filter Protocol Mapper
 
 A custom Keycloak OIDC protocol mapper that filters user roles by regular expression before adding them to the access token.
 This allows you to keep your tokens lean and only expose roles relevant for backend authorization.
 
 ---
+
+## Taming the Role Chaos: Filtering Keycloak Roles with Regex
+
+Have you ever connected Keycloak to an LDAP or a corporate SSO system, only to find your users showered with hundreds 
+of roles — many of which you don’t even recognize? We did. And while it’s impressive that your users can theoretically 
+access every system from the cafeteria menu to the nuclear launch codes, it’s… not ideal.
+
+So we built a custom Keycloak protocol mapper: the `RegexFilterRolesMapper`. It filters roles before they hit the 
+access token or ID token, keeping only those that match a configurable regular expression. For example, you might want 
+to include only roles starting with `APP_`, ignoring the deluge of `AD_Group_*` or irrelevant legacy permissions.
+
+### How It Works
+
+Our mapper iterates over the user’s effective roles, filters them using a configurable regex (with optional inversion 
+for those who prefer the world upside down), and writes the result as a claim into the token. You can use nested 
+claim keys like `realm_access.filtered_roles` to maintain compatibility with Keycloak's standards.
+
+### A word of self-criticism
+
+We know what you’re thinking: “Shouldn’t your groups be clean in the source directory instead of hacking around in 
+Keycloak?” You’re absolutely right. Ideally, your LDAP or IdP should only send relevant groups. But in the real 
+world — especially in large enterprises — that’s often a pipe dream. Sometimes, cleaning up legacy directories is more 
+politically fraught than international diplomacy.
+
+So, yes, this mapper is a band-aid. But it’s a practical, lightweight band-aid that solves a problem many of us face 
+right now.
 
 ## Features ✨
 
@@ -11,16 +37,29 @@ This allows you to keep your tokens lean and only expose roles relevant for back
 - Optional invert mode to exclude matching roles instead of including them
 - Reduced token size by omitting unnecessary or sensitive roles
 
+## Prerequisites
+
+This mapper requires Keycloak 22.0.0 or later. It's tested with all major Keycloak versions up to 26.2 and should work 
+with any version that supports custom protocol mappers. To be completely sure, compile it against your specific 
+Keycloak version (see below).
+
 ## Installation
 
-1. Build the JAR with Maven:
+Just copy the JAR into your Keycloak `providers` directory and restart Keycloak. No complex setup required!
+
+## Compilation
+
+Keycloak wants Java 17, so make sure you have that installed. The project uses Maven for building.
+
+1. Build the JAR:
    ```bash
    mvn clean package
    ```
-2. Copy the resulting JAR (e.g., `target/keycloak-regex-roles-mapper-1.0.0.jar`) into the Keycloak providers directory:
+2. Copy the resulting JAR (e.g., `target/regex-filter-protocol-mapper-1.1-SNAPSHOT-keycloak-22+.jar`) into Keycloak's 
+providers directory:
    - For standalone Keycloak:
      ```bash
-     cp target/keycloak-regex-roles-mapper-*.jar /opt/keycloak/providers/
+     cp target/regex-filter-protocol-mapper-*.jar /opt/keycloak/providers/
      ```
    - Or the equivalent directory in your Keycloak installation.
 3. Restart Keycloak:
@@ -40,14 +79,20 @@ This allows you to keep your tokens lean and only expose roles relevant for back
    - **Token Claim Name**: The claim name under which the filtered roles appear in the token (e.g., `realm_access.roles` or a custom claim like `user_roles`). Supports nested claims via dot notation (e.g., `foo.bar`).
 5. Save the mapper.
 
-Only roles matching your regex (or excluded by invert) will appear in tokens issued for this client.
+Only roles matching your regex (or excluded by the invert option) will appear in tokens issued for this client:
 
-## Why use this?
+```json
+{
+  "realm_access": {
+    "roles": [
+      "ROLE_ADMIN",
+      "ROLE_USER"
+    ]
+  }
+}
+```
 
-In many systems, users have multiple roles — some controlling permissions in the backend (critical), others enabling UI features (optional). By filtering which roles are exposed in tokens, you:
-- Improve performance (smaller tokens, faster processing)
-- Reduce attack surface (sensitive roles stay hidden)
-- Keep feature toggles separate from security-critical roles
+
 
 ## Contributing
 
