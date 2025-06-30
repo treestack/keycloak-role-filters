@@ -106,8 +106,7 @@ public class RegexFilterRolesMapper extends AbstractOIDCProtocolMapper
 
         try {
             final String regexConfig = mappingModel.getConfig().get(REGEX_CONFIG_PROPERTY);
-            final String invertConfigRaw = mappingModel.getConfig().get(INVERT_CONFIG_PROPERTY);
-            final boolean invertConfig = Boolean.parseBoolean(invertConfigRaw);
+            final boolean invertConfig = Boolean.parseBoolean(mappingModel.getConfig().getOrDefault(INVERT_CONFIG_PROPERTY, "false"));
             final String tokenClaimName = mappingModel.getConfig().get(TOKEN_CLAIM_NAME);
 
             if (regexConfig != null && !regexConfig.isEmpty()) {
@@ -134,7 +133,6 @@ public class RegexFilterRolesMapper extends AbstractOIDCProtocolMapper
         } catch (Exception e) {
             LOG.errorf(e, "Error filtering roles for user '%s' in mapper '%s'", user.getUsername(), mappingModel.getName());
         }
-
         return super.transformAccessToken(token, mappingModel, session, userSession, clientSessionCtx);
     }
 
