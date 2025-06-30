@@ -8,6 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        profile: [ "keycloak-22", "keycloak-23", "keycloak-24", "keycloak-25", "keycloak-26" ]
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
@@ -16,8 +19,8 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Build with Maven
-        run: mvn clean package
-      - name: Upload Release Asset
+        run: mvn clean package -P${{ matrix.profile }}
+      - name: Upload JAR to Release
         uses: softprops/action-gh-release@v1
         with:
           files: target/*.jar

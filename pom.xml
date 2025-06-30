@@ -5,20 +5,60 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.treestack.auth</groupId>
-    <artifactId>composite-roles-protocol-mapper</artifactId>
+    <artifactId>regex-filter-protocol-mapper</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+    <name>Regex Filter Protocol Mapper</name>
+    <description>Filter Keycloak roles by regex before adding them to tokens. Reduce token size and control exposed roles.</description>
+    <url>https://github.com/treestack/keycloak-role-filters</url>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <keycloak.version>22.0.5</keycloak.version>
         <junit.version>5.11.4</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <name>Composite Roles Protocol Mapper</name>
-    <description>Filter Keycloak roles by regex before adding them to tokens. Reduce token size and control exposed roles.</description>
-    <url>https://github.com/treestack/keycloak-role-filters</url>
+    <profiles>
+        <profile>
+            <id>keycloak-22</id>
+            <properties>
+                <keycloak.version>22.0.5</keycloak.version>
+                <jar.classifier>keycloak-22</jar.classifier>
+            </properties>
+        </profile>
+        <profile>
+            <id>keycloak-23</id>
+            <properties>
+                <keycloak.version>23.0.7</keycloak.version>
+                <jar.classifier>keycloak-23</jar.classifier>
+            </properties>
+        </profile>
+        <profile>
+            <id>keycloak-24</id>
+            <properties>
+                <keycloak.version>24.0.5</keycloak.version>
+                <jar.classifier>keycloak-24</jar.classifier>
+            </properties>
+        </profile>
+        <profile>
+            <id>keycloak-25</id>
+            <properties>
+                <keycloak.version>25.0.6</keycloak.version>
+                <jar.classifier>keycloak-25</jar.classifier>
+            </properties>
+        </profile>
+        <profile>
+            <id>keycloak-26</id>
+            <properties>
+                <keycloak.version>26.2.5</keycloak.version>
+                <jar.classifier>keycloak-26</jar.classifier>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
 
     <scm>
         <url>https://github.com/treestack/keycloak-role-filters</url>
@@ -76,6 +116,13 @@
     </dependencies>
     <build>
     <plugins>
+        <plugin>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.3.0</version>
+            <configuration>
+                <classifier>${jar.classifier}</classifier>
+            </configuration>
+        </plugin>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
