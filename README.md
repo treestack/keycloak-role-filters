@@ -35,9 +35,9 @@ This allows you to keep your tokens lean and only expose roles relevant for back
 3. Choose:
    - Mapper Type: **Whitelist by Regex Roles Mapper**
 4. Configure:
-   - **Whitelisted Roles Regular Expression**: A regex pattern matching the roles you want included in the token (e.g., `^ROLE_.*`).
-   - **Invert match**: If enabled, roles matching the regex will be excluded instead of included.
-   - **Token Claim Name**: The claim name under which the roles appear in the token (e.g., `realm_access.roles` or a custom claim like `user_roles`).
+   - **Whitelisted Roles Regular Expression**: A regex pattern that matches any part of a role name to include it in the token. For example, `ROLE_` matches any role containing `ROLE_`, such as `PAROLE_OFFICER`. If you only want roles that *start with* `ROLE_`, use `^ROLE_`. Matching is case-sensitive.
+   - **Invert match**: If enabled, roles **not** matching the regex will be included instead (i.e., regex acts as a blacklist).
+   - **Token Claim Name**: The claim name under which the filtered roles appear in the token (e.g., `realm_access.roles` or a custom claim like `user_roles`). Supports nested claims via dot notation (e.g., `foo.bar`).
 5. Save the mapper.
 
 Only roles matching your regex (or excluded by invert) will appear in tokens issued for this client.
