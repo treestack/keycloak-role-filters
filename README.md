@@ -25,7 +25,7 @@ claim keys like `realm_access.filtered_roles` to maintain compatibility with Key
 > [!WARNING]  
 > Shouldn’t the groups be clean in the source directory instead of hacking around in Keycloak?
 > Yes, they should. Ideally, your LDAP or IdP should only send relevant groups. But in the real world - especially in
-> large enterprises — that’s often a pipe dream. Sometimes, cleaning up legacy directories is simply
+> large enterprises - that’s often a pipe dream. Sometimes, cleaning up legacy directories is simply
 > not possible or a diplomatic nightmare.
 >
 > So, yes, this mapper is a band-aid. But it’s a practical, lightweight band-aid that solves a problem many of us face 
