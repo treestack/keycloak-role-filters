@@ -5,11 +5,10 @@ This allows you to keep your tokens lean and only expose roles relevant for back
 
 ---
 
-## Taming the Role Chaos: Filtering Keycloak Roles with Regex
+## Filtering Keycloak Roles with Regex
 
 Have you ever connected Keycloak to an LDAP or a corporate SSO system, only to find your users showered with hundreds 
-of roles — many of which you don’t even recognize? We did. And while it’s impressive that your users can theoretically 
-access every system from the cafeteria menu to the nuclear launch codes, it’s… not ideal.
+of roles - many of which you don’t even recognize? We did.
 
 So we built a custom Keycloak protocol mapper: the `RegexFilterRolesMapper`. It filters roles before they hit the 
 access token or ID token, keeping only those that match a configurable regular expression. For example, you might want 
@@ -17,19 +16,20 @@ to include only roles starting with `APP_`, ignoring the deluge of `AD_Group_*` 
 
 ### How It Works
 
-Our mapper iterates over the user’s effective roles, filters them using a configurable regex (with optional inversion 
+This mapper iterates over the user’s effective roles, filters them using a configurable regex (with optional inversion 
 for those who prefer the world upside down), and writes the result as a claim into the token. You can use nested 
 claim keys like `realm_access.filtered_roles` to maintain compatibility with Keycloak's standards.
 
-### A word of self-criticism
+## Security implications
 
-We know what you’re thinking: “Shouldn’t your groups be clean in the source directory instead of hacking around in 
-Keycloak?” You’re absolutely right. Ideally, your LDAP or IdP should only send relevant groups. But in the real 
-world — especially in large enterprises — that’s often a pipe dream. Sometimes, cleaning up legacy directories is more 
-politically fraught than international diplomacy.
-
-So, yes, this mapper is a band-aid. But it’s a practical, lightweight band-aid that solves a problem many of us face 
-right now.
+> [!WARNING]  
+> Shouldn’t the groups be clean in the source directory instead of hacking around in Keycloak?
+> Yes, they should. Ideally, your LDAP or IdP should only send relevant groups. But in the real world - especially in
+> large enterprises — that’s often a pipe dream. Sometimes, cleaning up legacy directories is simply
+> not possible or a diplomatic nightmare.
+>
+> So, yes, this mapper is a band-aid. But it’s a practical, lightweight band-aid that solves a problem many of us face 
+> right now.
 
 ## Features ✨
 
